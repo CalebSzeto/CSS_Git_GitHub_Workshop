@@ -1,9 +1,9 @@
 :root {
-  --background: #f4fff7;
-  --surface: #ffffff;
-  --primary: #167d3e;
-  --accent: #ffcb47;
-  --text: #17211b;
+  --background: #3a453d;
+  --surface: #838e91;
+  --primary: #529e6f;
+  --accent: #0d2d2a;
+  --text: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -26,13 +26,24 @@ nav {
 }
 
 button {
-  border: 0;
+  border: 50;
   border-radius: 999px;
   padding: 0.75rem 1.2rem;
   background: var(--primary);
   color: white;
   cursor: pointer;
   font-weight: 700;
+}
+
+.joinBtn {
+  width: 10em;
+  height: 5ex;
+  background-color: gold;
+  border: 2px solid firebrick;
+  border-radius: 10px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
 }
 
 main { max-width: 960px; margin: auto; padding: 3rem 1.25rem; }
