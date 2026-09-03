@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emergency Challenge Generator</title>
+    <style>
+      :root { color-scheme: light; --green:#167d3e; --ink:#17211b; --paper:#f4fff7; --yellow:#ffcb47; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; display:grid; place-items:center; padding:1.5rem; background:var(--paper); color:var(--ink); font-family:system-ui,sans-serif; }
+      main { width:min(680px,100%); background:white; border:3px solid var(--ink); border-radius:1.25rem; padding:clamp(1.5rem,5vw,3rem); box-shadow:10px 10px 0 var(--ink); }
+      .tag { display:inline-block; background:var(--yellow); padding:.35rem .7rem; font-weight:800; transform:rotate(-2deg); }
+      h1 { font-size:clamp(2rem,7vw,4rem); line-height:1; margin:1.2rem 0; }
+      label { display:block; font-weight:800; margin-bottom:.5rem; }
+      input { width:100%; padding:.9rem; border:2px solid var(--ink); border-radius:.6rem; font:inherit; }
+      button { margin-top:1rem; padding:.85rem 1.1rem; border:0; border-radius:999px; background:var(--green); color:white; font:inherit; font-weight:800; cursor:pointer; }
+      button:hover { transform:translateY(-2px); }
+      #result { margin-top:2rem; padding:1.2rem; border:2px dashed var(--green); border-radius:.8rem; }
+      #result[hidden] { display:none; }
+      pre { white-space:pre-wrap; background:#f3f3f3; padding:1rem; border-radius:.5rem; }
+      .copied { margin-left:.7rem; font-weight:700; color:var(--green); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="tag">INCOMING TRANSMISSION</span>
+      <h1>Management has an emergency.</h1>
+      <p>Count groups from the front-left of the room. Enter your group number to receive a unique challenge.</p>
+      <form id="challenge-form">
+        <label for="team-number">Group number (1–10)</label>
+        <input id="team-number" required type="number" min="1" max="10" placeholder="Example: 3" />
+        <label for="team-name" style="margin-top:1rem">Team name</label>
+        <input id="team-name" required maxlength="50" placeholder="Example: Merge Conflicts Anonymous" />
+        <button type="submit">Reveal our emergency</button>
+      </form>
+      <section id="result" hidden>
+        <p class="tag" id="challenge-number"></p>
+        <h2 id="challenge-title"></h2>
+        <p id="challenge-description"></p>
+        <h3>Copy this into a new GitHub Issue</h3>
+        <pre id="issue-text"></pre>
+        <button id="copy-button" type="button">Copy issue</button><span id="copy-status" class="copied" aria-live="polite"></span>
+      </section>
+    </main>
+    <script>
+      const challenges = [
+        ["Marketing Emergency", "Add exactly three unnecessary emojis to the hero section."],
+        ["Executive Decision", "Change the price to $1,000,000 and add one sentence justifying it."],
+        ["Customer Request", "Add a fourth feature card that matches the existing layout."],
+        ["Accessibility Report", "Improve one accessibility problem and explain the improvement in your pull request."],
+        ["Legal Complaint", "Rename the product everywhere without changing its features."],
+        ["Production Bug", "Prevent the Buy Now button from ever displaying an empty or undefined message."],
+        ["Mobile Crisis", "Improve the website layout for screens narrower than 650 pixels."],
+        ["Investor Demo", "Add a customer testimonial with a name, quote, and five-star rating."],
+        ["Brand Refresh", "Add a dark theme by changing the site's colors while keeping text readable."],
+        ["Feature Creep", "Add an FAQ section containing one ridiculous question and answer."],
+      ];
+
+      const form = document.querySelector("#challenge-form");
+      const result = document.querySelector("#result");
+      const issueText = document.querySelector("#issue-text");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const team = document.querySelector("#team-name").value.trim();
+        const groupNumber = Number(document.querySelector("#team-number").value);
+        const index = groupNumber - 1;
+        const [title, description] = challenges[index];
+        document.querySelector("#challenge-number").textContent = `CHALLENGE ${index + 1}`;
+        document.querySelector("#challenge-title").textContent = title;
+        document.querySelector("#challenge-description").textContent = description;
+        issueText.textContent = `[EMERGENCY] ${title}\n\nGroup ${groupNumber}: ${team}\n\n## Management's request\n${description}\n\n## Definition of done\n- [ ] Complete the change on a new branch\n- [ ] Open a pull request\n- [ ] Receive a teammate review\n- [ ] Include \"Closes #ISSUE_NUMBER\" in the PR description\n- [ ] Confirm the website still works`;
+        result.hidden = false;
+        document.querySelector("#copy-status").textContent = "";
+        result.scrollIntoView({ behavior: "smooth" });
+      });
+
+      document.querySelector("#copy-button").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(issueText.textContent);
+        document.querySelector("#copy-status").textContent = "Copied!";
+      });
+    </script>
+  </body>
+</html>
